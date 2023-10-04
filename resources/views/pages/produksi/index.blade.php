@@ -17,10 +17,10 @@
                 </div>
             @endif
             <div class="section-header">
-                <h1>Data Stok FF</h1>
+                <h1>Data User</h1>
                 <div class="section-header-breadcrumb">
                     <div class="breadcrumb-item active"><a href="#">Dashboard</a></div>
-                    <div class="breadcrumb-item">Stok FF</div>
+                    <div class="breadcrumb-item">Data User</div>
                 </div>
             </div>
 
@@ -29,20 +29,6 @@
                 <div class="row">
                     <div class="col-lg-12 col-md-12 col-12 col-sm-12">
                         <div class="card">
-                            {{-- <div class="card-header">
-                                <form>
-                                    <div class="input-group">
-                                        <input type="text" class="form-control" placeholder="Search">
-                                        <div class="input-group-btn">
-                                            <button class="btn btn-primary"><i class="fas fa-search"></i></button>
-                                        </div>
-                                    </div>
-                                </form>
-                                <div class="col-6">
-                                    <a href="#" class="btn btn-icon btn-primary"><i class="far fa-file">
-                                            export</i></a>
-                                </div>
-                            </div> --}}
                             <div class="card-body p-4">
                                 <div class="table-responsive">
                                     {{-- <table class="table table-bordered table-striped mb-0"> --}}
@@ -52,39 +38,32 @@
                                                 <th class="text-center">
                                                     #
                                                 </th>
-                                                <th>SKU</th>
-                                                <th>Nama Barang</th>
-                                                <th>Nama tenant</th>
-                                                <th>Total Stok</th>
+                                                <th>Nama</th>
+                                                <th>Email</th>
+                                                <th>Action</th>
                                             </tr>
                                         </thead>
                                         <tbody>
 
-                                            @foreach ($data1 as $item)
-                                            @foreach ($data3 as $itemtenant)
-                                            {{-- @foreach ($meta as $itemstok) --}}
+                                            @foreach ($data as $item)
                                                 <tr>
                                                     <td>{{ $loop->iteration }}</td>
-                                                    {{-- <td>{{ dd($data3) }}</td> --}}
-                                                    {{-- <td>{{ dd( $item->skuNumber) }}</td> --}}
-                                                    <td>{{ $item->skuNumber }}</td>
-                                                    <td>{{ $item->productName }}</td>
-                                                    <td>{{ $itemtenant->company_name }}</td>
-                                                    <td>{{  $item->stock }}</td>
-                                                    {{-- <td>{{ $item->ikubku }}</td> --}}
-                                                    {{-- <td>{{ $item->place }}</td>
-                                                <td>{{ $item->tenant }}</td> --}}
-                                                    {{-- <td> <a href="" class="btn btn-primary btn-action mr-1"><i
-                                                            class="fas fa-pencil-alt"></i></a>
-                                                    <a href="" class="btn btn-danger btn-action"><i
-                                                            class="fas fa-trash"></i></a>
-                                                </td> --}}
+                                                    <td>{{ $item->name }}</td>
+                                                    <td>{{ $item->email }}</td>
+                                                      <th>
+                                                        <a href="#"
+                                                            class="edit btn btn-info btn-sm">
+                                                            <i class="ri-eye-2-fill"></i> Edit
+                                                        </a>
+                                                        <a href="#"
+                                                            class="edit btn btn-danger btn-sm">
+                                                            <i class="ri-eye-2-fill"></i> Delete
+                                                        </a>
+                                                    </th>
                                                 </tr>
-                                            @endforeach
                                             @endforeach
                                         </tbody>
                                     </table>
-                                    {{-- {{ $dataPegawai->links() }} --}}
                                 </div>
                             </div>
                         </div>

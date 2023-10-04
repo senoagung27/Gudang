@@ -1,7 +1,7 @@
 <div class="main-sidebar sidebar-style-2">
     <aside id="sidebar-wrapper">
         <div class="sidebar-brand">
-            <a href="{{ route('dashboard') }}">HRIS APP</a>
+            <a href="{{ route('dashboard') }}">Gudang APP</a>
         </div>
         <div class="sidebar-brand sidebar-brand-sm">
             <a href="{{ route('dashboard') }}">
@@ -19,8 +19,16 @@
             <li class="menu-header">Master Data</li>
             <li class="nav-item">
                 <a href="{{ route('users.index') }}" class="nav-link"><i
-                        class="fas fa-database"></i><span>User</span></a>
+                        class="fas fa-database"></i><span>Material</span></a>
             </li>
+            <li class="nav-item">
+              <a href="{{ route('users.index') }}" class="nav-link"><i
+                      class="fas fa-database"></i><span>Produksi</span></a>
+          </li>
+          <li class="nav-item">
+            <a href="{{ route('users.index') }}" class="nav-link"><i
+                    class="fas fa-database"></i><span>User</span></a>
+        </li>
             {{-- @endrole
             @endauth --}}
 

@@ -32,7 +32,7 @@
                             </div>
                             <div class="card-wrap">
                                 <div class="card-header">
-                                    <h5>Pegawai</h5>
+                                    <h5>Material</h5>
                                     <h4>Data</h4>
                                 </div>
                                 <div class="card-body">
