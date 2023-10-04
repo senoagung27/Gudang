@@ -5,6 +5,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\RolesController;
 use App\Http\Controllers\StokFFController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\MasterMaterialController;
 use App\Http\Controllers\PermissionsController;
 use App\Http\Controllers\StokJubelioController;
 
@@ -104,14 +105,14 @@ Route::group([ "middleware" => ['auth:sanctum', config('jetstream.auth_session')
     /**
      * User Routes
      */
-    Route::group(['prefix' => 'posts'], function() {
-        Route::get('/', [ PostsController::class, 'index'])->name('posts.index');
-        Route::get('/create', 'PostsController@create')->name('posts.create');
-        Route::post('/create', 'PostsController@store')->name('posts.store');
-        Route::get('/{post}/show', 'PostsController@show')->name('posts.show');
-        Route::get('/{post}/edit', 'PostsController@edit')->name('posts.edit');
-        Route::patch('/{post}/update', 'PostsController@update')->name('posts.update');
-        Route::delete('/{post}/delete', 'PostsController@destroy')->name('posts.destroy');
+    Route::group(['prefix' => 'material'], function() {
+        Route::get('/', [ MasterMaterialController::class, 'index'])->name('material.index');
+        Route::get('/create', 'MasterMaterialController@create')->name('material.create');
+        Route::post('/create', 'MasterMaterialController@store')->name('material.store');
+        Route::get('/{post}/show', 'MasterMaterialController@show')->name('material.show');
+        Route::get('/{post}/edit', 'MasterMaterialController@edit')->name('material.edit');
+        Route::patch('/{post}/update', 'MasterMaterialController@update')->name('material.update');
+        Route::delete('/{post}/delete', 'MasterMaterialController@destroy')->name('material.destroy');
     });
 
     Route::resource('roles', RolesController::class);

@@ -23,6 +23,9 @@
                     <div class="breadcrumb-item">Data User</div>
                 </div>
             </div>
+            <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
+                <i class="fas fa-plus fa-sm text-white-50"></i> Tambah Data
+            </a>
 
             <div class="section-body">
 
