@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Material;
+use App\Models\Produksi;
 use Illuminate\Http\Request;
 
 class ProduksiController extends Controller
@@ -13,7 +15,9 @@ class ProduksiController extends Controller
      */
     public function index()
     {
-        //
+        $materials = Material::all();
+
+        return view('pages.master-material.index', compact('materials'));
     }
 
     /**
@@ -21,9 +25,10 @@ class ProduksiController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(Request $request)
     {
-        //
+        $permissions = Material::get();
+        return view('pages.master-material.create', compact('permissions'));
     }
 
     /**
@@ -34,7 +39,33 @@ class ProduksiController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $jumlah_mobil = $request->input('jumlah_mobil');
+
+        $materials = Material::all();
+
+        $total_stok = 0;
+        $total_biaya = 0;
+        $total_waktu = 0;
+
+        foreach ($materials as $material) {
+            $komponen = Produksi::where('material_id', $material->id)->get();
+
+            $total_stok += $material->stok * $jumlah_mobil;
+            $total_biaya += $material->biaya * $jumlah_mobil;
+            $total_waktu += $material->waktu_produksi * $jumlah_mobil;
+
+            foreach ($komponen as $komponen_material) {
+                $total_stok += $komponen_material->jumlah * $material->stok * $jumlah_mobil;
+                $total_biaya += $komponen_material->jumlah * $material->biaya * $material->stok * $jumlah_mobil;
+                $total_waktu += $komponen_material->jumlah * $material->waktu_produksi * $material->stok * $jumlah_mobil;
+            }
+        }
+
+        return response()->json([
+            'total_stok' => $total_stok,
+            'total_biaya' => $total_biaya,
+            'total_waktu' => $total_waktu,
+        ]);
     }
 
     /**
