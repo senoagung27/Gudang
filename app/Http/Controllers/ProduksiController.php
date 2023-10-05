@@ -15,9 +15,9 @@ class ProduksiController extends Controller
      */
     public function index()
     {
-        $data = Material::all();
+        $data = Produksi::all();
 
-        return view('pages.master-material.index', compact('data'));
+        return view('pages.produksi.index', compact('data'));
     }
 
     /**
@@ -27,8 +27,9 @@ class ProduksiController extends Controller
      */
     public function create(Request $request)
     {
-        $permissions = Material::get();
-        return view('pages.master-material.create', compact('permissions'));
+        // $permissions = Produksi::get();
+        // return view('pages.produksi.create', compact('permissions'));
+        return view('pages.produksi.create');
     }
 
     /**

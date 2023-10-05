@@ -23,7 +23,7 @@
                     <div class="breadcrumb-item">Data Material</div>
                 </div>
             </div>
-            <a href="#" class="btn btn-icon icon-left btn-primary mb-3"><i class="fas fa-plus fa-sm text-white-50"></i> Tambah Data</a>
+            <a href="{{ route('material.create') }}" class="btn btn-icon icon-left btn-primary mb-3"><i class="fas fa-plus fa-sm text-white-50"></i> Tambah Data</a>
 
             <div class="section-body">
 

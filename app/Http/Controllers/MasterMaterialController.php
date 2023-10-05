@@ -26,7 +26,7 @@ class MasterMaterialController extends Controller
      */
     public function create()
     {
-        return view('materials.create');
+        return view('pages.master-material.create');
     }
 
     /**

@@ -24,6 +24,7 @@
                 </div>
             </div>
 
+            <a href="{{ route('produksi.create') }}" class="btn btn-icon icon-left btn-primary mb-3"><i class="fas fa-plus fa-sm text-white-50"></i> Tambah Data</a>
             <div class="section-body">
 
                 <div class="row">
@@ -38,8 +39,8 @@
                                                 <th class="text-center">
                                                     #
                                                 </th>
-                                                <th>Nama</th>
-                                                <th>Email</th>
+                                                <th>Jumalah Produksi</th>
+                                                <th>Waktu Pengerjaan</th>
                                                 <th>Action</th>
                                             </tr>
                                         </thead>
@@ -48,7 +49,7 @@
                                             @foreach ($data as $item)
                                                 <tr>
                                                     <td>{{ $loop->iteration }}</td>
-                                                    <td>{{ $item->name }}</td>
+                                                    <td>{{ $item->jumalah }}</td>
                                                     <td>{{ $item->email }}</td>
                                                       <th>
                                                         <a href="#"
