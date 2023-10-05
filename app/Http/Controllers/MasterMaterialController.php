@@ -14,9 +14,9 @@ class MasterMaterialController extends Controller
      */
     public function index()
     {
-        $materials = Material::all();
+        $data = Material::all();
 
-        return view('pages.master-material.index', compact('materials'));
+        return view('pages.master-material.index', compact('data'));
     }
 
     /**
@@ -26,7 +26,7 @@ class MasterMaterialController extends Controller
      */
     public function create()
     {
-        //
+        return view('materials.create');
     }
 
     /**
@@ -37,7 +37,9 @@ class MasterMaterialController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $material = Material::create($request->all());
+
+        return redirect()->route('materials.index');
     }
 
     /**

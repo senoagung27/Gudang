@@ -15,9 +15,9 @@ class ProduksiController extends Controller
      */
     public function index()
     {
-        $materials = Material::all();
+        $data = Material::all();
 
-        return view('pages.master-material.index', compact('materials'));
+        return view('pages.master-material.index', compact('data'));
     }
 
     /**

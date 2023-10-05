@@ -20,12 +20,10 @@
                 <h1>Data User</h1>
                 <div class="section-header-breadcrumb">
                     <div class="breadcrumb-item active"><a href="#">Dashboard</a></div>
-                    <div class="breadcrumb-item">Data User</div>
+                    <div class="breadcrumb-item">Data Material</div>
                 </div>
             </div>
-            <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
-                <i class="fas fa-plus fa-sm text-white-50"></i> Tambah Data
-            </a>
+            <a href="#" class="btn btn-icon icon-left btn-primary mb-3"><i class="fas fa-plus fa-sm text-white-50"></i> Tambah Data</a>
 
             <div class="section-body">
 
@@ -42,8 +40,10 @@
                                                     #
                                                 </th>
                                                 <th>Nama</th>
-                                                <th>Email</th>
-                                                <th>Action</th>
+                                                <th>Satuan</th>
+                                                <th>Stok</th>
+                                                <th>Biaya</th>
+                                                <th>Waktu Produksi</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -52,7 +52,10 @@
                                                 <tr>
                                                     <td>{{ $loop->iteration }}</td>
                                                     <td>{{ $item->name }}</td>
-                                                    <td>{{ $item->email }}</td>
+                                                    <td>{{ $item->satuan }}</td>
+                                                    <td>{{ $item->stok }}</td>
+                                                    <td>{{ $item->biaya }}</td>
+                                                    <td>{{ $item->waktu }}</td>
                                                       <th>
                                                         <a href="#"
                                                             class="edit btn btn-info btn-sm">
