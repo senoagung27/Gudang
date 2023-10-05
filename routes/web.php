@@ -4,10 +4,11 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\RolesController;
 use App\Http\Controllers\StokFFController;
+use App\Http\Controllers\ProduksiController;
 use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\MasterMaterialController;
 use App\Http\Controllers\PermissionsController;
 use App\Http\Controllers\StokJubelioController;
+use App\Http\Controllers\MasterMaterialController;
 
 /*
 |--------------------------------------------------------------------------
@@ -113,6 +114,15 @@ Route::group([ "middleware" => ['auth:sanctum', config('jetstream.auth_session')
         Route::get('/{post}/edit', 'MasterMaterialController@edit')->name('material.edit');
         Route::patch('/{post}/update', 'MasterMaterialController@update')->name('material.update');
         Route::delete('/{post}/delete', 'MasterMaterialController@destroy')->name('material.destroy');
+    });
+    Route::group(['prefix' => 'produksi'], function() {
+        Route::get('/', [ ProduksiController::class, 'index'])->name('produksi.index');
+        Route::get('/create', 'ProduksiController@create')->name('produksi.create');
+        Route::post('/create', 'ProduksiController@store')->name('produksi.store');
+        Route::get('/{post}/show', 'ProduksiController@show')->name('produksi.show');
+        Route::get('/{post}/edit', 'ProduksiController@edit')->name('produksi.edit');
+        Route::patch('/{post}/update', 'ProduksiController@update')->name('produksi.update');
+        Route::delete('/{post}/delete', 'ProduksiController@destroy')->name('produksi.destroy');
     });
 
     Route::resource('roles', RolesController::class);

@@ -17,7 +17,7 @@
                 </div>
             @endif
             <div class="section-header">
-                <h1>Data User</h1>
+                <h1>Data Material</h1>
                 <div class="section-header-breadcrumb">
                     <div class="breadcrumb-item active"><a href="#">Dashboard</a></div>
                     <div class="breadcrumb-item">Data Material</div>
