@@ -109,7 +109,7 @@ Route::group([ "middleware" => ['auth:sanctum', config('jetstream.auth_session')
     Route::group(['prefix' => 'material'], function() {
         Route::get('/', [ MasterMaterialController::class, 'index'])->name('material.index');
         Route::get('/create', [ MasterMaterialController::class, 'create'])->name('material.create');
-        Route::post('/store', 'MasterMaterialController@store')->name('material.store');
+        Route::post('/store', [ MasterMaterialController::class, 'store'])->name('material.store');
         Route::get('/{post}/show', 'MasterMaterialController@show')->name('material.show');
         Route::get('/{post}/edit', 'MasterMaterialController@edit')->name('material.edit');
         Route::patch('/{post}/update', 'MasterMaterialController@update')->name('material.update');
@@ -118,7 +118,7 @@ Route::group([ "middleware" => ['auth:sanctum', config('jetstream.auth_session')
     Route::group(['prefix' => 'produksi'], function() {
         Route::get('/', [ ProduksiController::class, 'index'])->name('produksi.index');
         Route::get('/create', [ ProduksiController::class, 'create'])->name('produksi.create');
-        Route::post('/store', 'ProduksiController@store')->name('produksi.store');
+        Route::post('/store', [ ProduksiController::class, 'store'])->name('produksi.store');
         Route::get('/{post}/show', 'ProduksiController@show')->name('produksi.show');
         Route::get('/{post}/edit', 'ProduksiController@edit')->name('produksi.edit');
         Route::patch('/{post}/update', 'ProduksiController@update')->name('produksi.update');
