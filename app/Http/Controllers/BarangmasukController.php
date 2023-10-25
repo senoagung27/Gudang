@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use App\Models\CustomerModel;
 use App\Models\BarangmasukModel;
 use Yajra\DataTables\DataTables;
+use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Session;
 
@@ -24,7 +25,13 @@ class BarangmasukController extends Controller
     public function show(Request $request)
     {
         if ($request->ajax()) {
-            $data = BarangmasukModel::leftJoin('tbl_barang', 'tbl_barang.barang_kode', '=', 'tbl_barangmasuk.barang_kode')->leftJoin('tbl_customer', 'tbl_customer.customer_id', '=', 'tbl_barangmasuk.customer_id')->orderBy('bm_id', 'DESC')->get();
+            $data = BarangmasukModel::leftJoin('barang_models', 'barang_models.barang_kode', '=', 'barangmasuk_models.barang_kode')->leftJoin('customer_models', 'customer_models.customer_id', '=', 'barangmasuk_models.customer_id')->orderBy('bm_id', 'DESC')->get();
+            // $data = DB::table('barangmasuk_models')
+            // ->leftJoin('barang_models', 'barang_models.barang_kode', '=', 'barangmasuk_models.barang_kode')
+            // ->leftJoin('customer_models', 'customer_models.customer_id', '=', 'barangmasuk_models.customer_id')
+            // ->orderBy('bm_id', 'desc')
+            // ->get();
+
             return DataTables::of($data)
                 ->addIndexColumn()
                 ->addColumn('tgl', function ($row) {

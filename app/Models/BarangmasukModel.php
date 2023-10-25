@@ -10,11 +10,12 @@ class BarangmasukModel extends Model
     use HasFactory;
     protected $table = "barangmasuk_models";
     protected $primaryKey = 'bm_id';
-    protected $fillable = [
-        'bm_kode',
-        'barang_kode',
-        'customer_id',
-        'bm_tanggal',
-        'bm_jumlah',
-    ]; 
+    protected $guarded = ['*'];
+    // protected $fillable = [
+    //     'bm_kode',
+    //     'barang_kode',
+    //     'customer_id',
+    //     'bm_tanggal',
+    //     'bm_jumlah',
+    // ]; 
 }

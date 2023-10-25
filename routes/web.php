@@ -23,6 +23,7 @@ use App\Http\Controllers\StokJubelioController;
 use App\Http\Controllers\LapStokBarangController;
 use App\Http\Controllers\LapBarangMasukController;
 use App\Http\Controllers\MasterMaterialController;
+use App\Http\Controllers\LapBarangKeluarController;
 use App\Http\Controllers\Admin\BarangkeluarController;
 
 /*
@@ -230,7 +231,7 @@ Route::group(['middleware' => 'userlogin'], function () {
 
     Route::middleware(['checkRoleUser:/lap-barang-masuk,submenu'])->group(function () {
         // Barang Keluar
-        Route::resource('/admin/barang-keluar', \App\Http\Controllers\Admin\BarangkeluarController::class);
+        Route::resource('/admin/barang-keluar', \App\Http\Controllers\BarangkeluarController::class);
         Route::get('/admin/barang-keluar/show/', [BarangkeluarController::class, 'show'])->name('barang-keluar.getbarang-keluar');
         Route::post('/admin/barang-keluar/proses_tambah/', [BarangkeluarController::class, 'proses_tambah'])->name('barang-keluar.store');
         Route::post('/admin/barang-keluar/proses_ubah/{barangkeluar}', [BarangkeluarController::class, 'proses_ubah']);
@@ -247,7 +248,7 @@ Route::group(['middleware' => 'userlogin'], function () {
 
     Route::middleware(['checkRoleUser:/lap-barang-keluar,submenu'])->group(function () {
         // Laporan Barang Keluar
-        Route::resource('/admin/lap-barang-keluar', \App\Http\Controllers\Admin\LapBarangKeluarController::class);
+        Route::resource('/admin/lap-barang-keluar', \App\Http\Controllers\LapBarangKeluarController::class);
         Route::get('/admin/lapbarangkeluar/print/', [LapBarangKeluarController::class, 'print'])->name('lap-bk.print');
         Route::get('/admin/lapbarangkeluar/pdf/', [LapBarangKeluarController::class, 'pdf'])->name('lap-bk.pdf');
         Route::get('/admin/lap-barang-keluar/show/', [LapBarangKeluarController::class, 'show'])->name('lap-bk.getlap-bk');

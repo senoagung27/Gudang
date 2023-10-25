@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Admin;
+namespace App\Http\Controllers;
 
 use Carbon\Carbon;
 use App\Models\AksesModel;
@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Yajra\DataTables\DataTables;
 use App\Models\Admin\BarangModel;
 use App\Models\BarangkeluarModel;
+use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Session;
 
@@ -23,7 +24,12 @@ class BarangkeluarController extends Controller
     public function show(Request $request)
     {
         if ($request->ajax()) {
-            $data = BarangkeluarModel::leftJoin('tbl_barang', 'tbl_barang.barang_kode', '=', 'tbl_barangkeluar.barang_kode')->orderBy('bk_id', 'DESC')->get();
+            $data = BarangkeluarModel::leftJoin('barang_models', 'barang_models.barang_kode', '=', 'barangkeluar_models.barang_kode')->orderBy('bk_id', 'DESC')->get();
+            // $data = DB::table('barangkeluar_models')
+            // ->leftJoin('barang_models', 'barang_models.barang_kode', '=', 'barangkeluar_models.barang_kode')
+            // ->orderBy('bk_id', 'desc')
+            // ->get();
+
             return DataTables::of($data)
                 ->addIndexColumn()
                 ->addColumn('tgl', function ($row) {
