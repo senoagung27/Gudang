@@ -3,8 +3,8 @@
 
 <?php
 
-use App\Http\Controllers\Admin\DashboardController;
-use App\Models\Admin\WebModel;
+use App\Http\Controllers\DashboardController;
+use App\Models\WebModel;
 use Illuminate\Support\Facades\Session;
 
 $web = WebModel::first();

@@ -3,9 +3,9 @@
 
 <?php
 
-use App\Http\Controllers\Admin\LoginController;
-use App\Models\Admin\AppreanceModel;
-use App\Models\Admin\WebModel;
+use App\Http\Controllers\LoginController;
+use App\Models\AppreanceModel;
+use App\Models\WebModel;
 use Illuminate\Support\Facades\Session;
 
 $web = WebModel::first();
