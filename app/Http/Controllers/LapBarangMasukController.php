@@ -2,83 +2,85 @@
 
 namespace App\Http\Controllers;
 
+use Carbon\Carbon;
+use App\Models\WebModel;
+use Barryvdh\DomPDF\PDF;
 use Illuminate\Http\Request;
+use App\Models\BarangmasukModel;
+use Yajra\DataTables\DataTables;
+use App\Http\Controllers\Controller;
 
 class LapBarangMasukController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        $data["title"] = "Lap Barang Masuk";
+        return view('Admin.Laporan.BarangMasuk.index', $data);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
+    public function print(Request $request)
     {
-        //
+        if ($request->tglawal) {
+            $data['data'] = BarangmasukModel::leftJoin('tbl_barang', 'tbl_barang.barang_kode', '=', 'tbl_barangmasuk.barang_kode')->leftJoin('tbl_customer', 'tbl_customer.customer_id', '=', 'tbl_barangmasuk.customer_id')->whereBetween('bm_tanggal', [$request->tglawal, $request->tglakhir])->orderBy('bm_id', 'DESC')->get();
+        } else {
+            $data['data'] = BarangmasukModel::leftJoin('tbl_barang', 'tbl_barang.barang_kode', '=', 'tbl_barangmasuk.barang_kode')->leftJoin('tbl_customer', 'tbl_customer.customer_id', '=', 'tbl_barangmasuk.customer_id')->orderBy('bm_id', 'DESC')->get();
+        }
+
+        $data["title"] = "Print Barang Masuk";
+        $data['web'] = WebModel::first();
+        $data['tglawal'] = $request->tglawal;
+        $data['tglakhir'] = $request->tglakhir;
+        return view('Admin.Laporan.BarangMasuk.print', $data);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
+    public function pdf(Request $request)
     {
-        //
+        if ($request->tglawal) {
+            $data['data'] = BarangmasukModel::leftJoin('tbl_barang', 'tbl_barang.barang_kode', '=', 'tbl_barangmasuk.barang_kode')->leftJoin('tbl_customer', 'tbl_customer.customer_id', '=', 'tbl_barangmasuk.customer_id')->whereBetween('bm_tanggal', [$request->tglawal, $request->tglakhir])->orderBy('bm_id', 'DESC')->get();
+        } else {
+            $data['data'] = BarangmasukModel::leftJoin('tbl_barang', 'tbl_barang.barang_kode', '=', 'tbl_barangmasuk.barang_kode')->leftJoin('tbl_customer', 'tbl_customer.customer_id', '=', 'tbl_barangmasuk.customer_id')->orderBy('bm_id', 'DESC')->get();
+        }
+
+        $data["title"] = "PDF Barang Masuk";
+        $data['web'] = WebModel::first();
+        $data['tglawal'] = $request->tglawal;
+        $data['tglakhir'] = $request->tglakhir;
+        $pdf = PDF::loadView('Admin.Laporan.BarangMasuk.pdf', $data);
+        
+        if($request->tglawal){
+            return $pdf->download('lap-bm-'.$request->tglawal.'-'.$request->tglakhir.'.pdf');
+        }else{
+            return $pdf->download('lap-bm-semua-tanggal.pdf');
+        }
+        
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
+    public function show(Request $request)
     {
-        //
-    }
+        if ($request->ajax()) {
+            if ($request->tglawal == '') {
+                $data = BarangmasukModel::leftJoin('tbl_barang', 'tbl_barang.barang_kode', '=', 'tbl_barangmasuk.barang_kode')->leftJoin('tbl_customer', 'tbl_customer.customer_id', '=', 'tbl_barangmasuk.customer_id')->orderBy('bm_id', 'DESC')->get();
+            } else {
+                $data = BarangmasukModel::leftJoin('tbl_barang', 'tbl_barang.barang_kode', '=', 'tbl_barangmasuk.barang_kode')->leftJoin('tbl_customer', 'tbl_customer.customer_id', '=', 'tbl_barangmasuk.customer_id')->whereBetween('bm_tanggal', [$request->tglawal, $request->tglakhir])->orderBy('bm_id', 'DESC')->get();
+            }
+            return DataTables::of($data)
+                ->addIndexColumn()
+                ->addColumn('tgl', function ($row) {
+                    $tgl = $row->bm_tanggal == '' ? '-' : Carbon::parse($row->bm_tanggal)->translatedFormat('d F Y');
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
+                    return $tgl;
+                })
+                ->addColumn('customer', function ($row) {
+                    $customer = $row->customer_id == '' ? '-' : $row->customer_nama;
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
+                    return $customer;
+                })
+                ->addColumn('barang', function ($row) {
+                    $barang = $row->barang_id == '' ? '-' : $row->barang_nama;
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
+                    return $barang;
+                })
+                ->rawColumns(['tgl', 'customer', 'barang'])->make(true);
+        }
     }
 }

@@ -1,7 +1,9 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\MenuController;
 use App\Http\Controllers\MerkController;
+use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\AksesController;
 use App\Http\Controllers\LoginController;
@@ -14,15 +16,14 @@ use App\Http\Controllers\ProduksiController;
 use App\Http\Controllers\AppreanceController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\UserModelController;
+use App\Http\Controllers\BarangmasukController;
 use App\Http\Controllers\JenisBarangController;
-use App\Http\Controllers\MenuController;
-use App\Http\Controllers\RoleController;
 use App\Http\Controllers\PermissionsController;
 use App\Http\Controllers\StokJubelioController;
-use App\Http\Controllers\BarangkeluarController;
 use App\Http\Controllers\LapStokBarangController;
 use App\Http\Controllers\LapBarangMasukController;
 use App\Http\Controllers\MasterMaterialController;
+use App\Http\Controllers\Admin\BarangkeluarController;
 
 /*
 |--------------------------------------------------------------------------

@@ -2,84 +2,112 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Controller;
+use App\Models\AksesModel;
 use App\Models\CustomerModel;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Session;
+use Yajra\DataTables\Facades\DataTables;
 
 class CustomerController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function index()
     {
-        //
+        $data["title"] = "Customer";
+        $data["hakTambah"] = AksesModel::leftJoin('menu_models', 'menu_models.menu_id', '=', 'akses_models.menu_id')->where(array('akses_models.role_id' => Session::get('user')->role_id, 'menu_models.menu_judul' => 'Customer', 'akses_models.akses_type' => 'create'))->count();
+        return view('Admin.Customer.index', $data);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
+    public function show(Request $request)
     {
-        //
+        if ($request->ajax()) {
+            $data = CustomerModel::orderBy('customer_id', 'DESC')->get();
+            return DataTables::of($data)
+                ->addIndexColumn()
+                ->addColumn('notelp', function ($row) {
+                    $notelp = $row->customer_notelp == '' ? '-' : $row->customer_notelp;
+
+                    return $notelp;
+                })
+                ->addColumn('alamat', function ($row) {
+                    $alamat = $row->customer_alamat == '' ? '-' : $row->customer_alamat;
+
+                    return $alamat;
+                })
+                ->addColumn('action', function ($row) {
+                    $array = array(
+                        "customer_id" => $row->customer_id,
+                        "customer_nama" => trim(preg_replace('/[^A-Za-z0-9-]+/', '_', $row->customer_nama)),
+                        "customer_alamat" => trim(preg_replace('/[^A-Za-z0-9-]+/', '_', $row->customer_alamat)),
+                        "customer_notelp" => $row->customer_notelp
+                    );
+                    $button = '';
+                    $hakEdit = AksesModel::leftJoin('menu_models', 'menu_models.menu_id', '=', 'akses_models.menu_id')->where(array('akses_models.role_id' => Session::get('user')->role_id, 'menu_models.menu_judul' => 'Customer', 'akses_models.akses_type' => 'update'))->count();
+                    $hakDelete = AksesModel::leftJoin('menu_models', 'menu_models.menu_id', '=', 'akses_models.menu_id')->where(array('akses_models.role_id' => Session::get('user')->role_id, 'menu_models.menu_judul' => 'Customer', 'akses_models.akses_type' => 'delete'))->count();
+                    if ($hakEdit > 0 && $hakDelete > 0) {
+                        $button .= '
+                        <div class="g-2">
+                        <a class="btn modal-effect text-primary btn-sm" data-bs-effect="effect-super-scaled" data-bs-toggle="modal" href="#Umodaldemo8" data-bs-toggle="tooltip" data-bs-original-title="Edit" onclick=update(' . json_encode($array) . ')><span class="fe fe-edit text-success fs-14"></span></a>
+                        <a class="btn modal-effect text-danger btn-sm" data-bs-effect="effect-super-scaled" data-bs-toggle="modal" href="#Hmodaldemo8" onclick=hapus(' . json_encode($array) . ')><span class="fe fe-trash-2 fs-14"></span></a>
+                        </div>
+                        ';
+                    } else if ($hakEdit > 0 && $hakDelete == 0) {
+                        $button .= '
+                        <div class="g-2">
+                            <a class="btn modal-effect text-primary btn-sm" data-bs-effect="effect-super-scaled" data-bs-toggle="modal" href="#Umodaldemo8" data-bs-toggle="tooltip" data-bs-original-title="Edit" onclick=update(' . json_encode($array) . ')><span class="fe fe-edit text-success fs-14"></span></a>
+                        </div>
+                        ';
+                    } else if ($hakEdit == 0 && $hakDelete > 0) {
+                        $button .= '
+                        <div class="g-2">
+                        <a class="btn modal-effect text-danger btn-sm" data-bs-effect="effect-super-scaled" data-bs-toggle="modal" href="#Hmodaldemo8" onclick=hapus(' . json_encode($array) . ')><span class="fe fe-trash-2 fs-14"></span></a>
+                        </div>
+                        ';
+                    } else {
+                        $button .= '-';
+                    }
+                    return $button;
+                })
+                ->rawColumns(['action', 'notelp', 'alamat'])->make(true);
+        }
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
+    public function proses_tambah(Request $request)
     {
-        //
+        $slug = strtolower(trim(preg_replace('/[^A-Za-z0-9-]+/', '-', $request->customer)));
+
+        //insert data
+        CustomerModel::create([
+            'customer_nama' => $request->customer,
+            'customer_slug' => $slug,
+            'customer_notelp'   => $request->notelp,
+            'customer_alamat'   => $request->alamat,
+        ]);
+
+        return response()->json(['success' => 'Berhasil']);
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\CustomerModel  $customerModel
-     * @return \Illuminate\Http\Response
-     */
-    public function show(CustomerModel $customerModel)
+    public function proses_ubah(Request $request, CustomerModel $customer)
     {
-        //
+        $slug = strtolower(trim(preg_replace('/[^A-Za-z0-9-]+/', '-', $request->customer)));
+
+        //update data
+        $customer->update([
+            'customer_nama' => $request->customer,
+            'customer_slug' => $slug,
+            'customer_notelp'   => $request->notelp,
+            'customer_alamat'   => $request->alamat,
+        ]);
+
+        return response()->json(['success' => 'Berhasil']);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\CustomerModel  $customerModel
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(CustomerModel $customerModel)
+    
+    public function proses_hapus(Request $request, CustomerModel $customer)
     {
-        //
-    }
+        //delete
+        $customer->delete();
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\CustomerModel  $customerModel
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, CustomerModel $customerModel)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\CustomerModel  $customerModel
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(CustomerModel $customerModel)
-    {
-        //
+        return response()->json(['success' => 'Berhasil']);
     }
 }
