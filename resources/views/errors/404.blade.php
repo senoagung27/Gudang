@@ -2,7 +2,7 @@
 <html lang="en" dir="ltr">
 
 <?php
-use App\Models\WebModel;
+use App\Models\Admin\WebModel;
 
 $web = WebModel::first();
 ?>

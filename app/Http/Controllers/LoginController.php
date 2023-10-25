@@ -21,13 +21,13 @@ class LoginController extends Controller
     public function proseslogin(Request $request)
     {
         $where = array(
-            'tbl_user.user_nama' => $request->user,
-            'tbl_user.user_password' => md5($request->pwd)
+            'user_models.user_nama' => $request->user,
+            'user_models.user_password' => md5($request->pwd)
         );
         $getCount = UserModel::where($where)->count();
 
         if ($getCount > 0) {
-            $query = UserModel::leftJoin('tbl_role', 'tbl_role.role_id', '=', 'tbl_user.role_id')->select()->where($where)->first();
+            $query = UserModel::leftJoin('role_models', 'role_models.role_id', '=', 'user_models.role_id')->select()->where($where)->first();
             $role = AksesModel::where('role_id', '=', $query->role_id)->get();
 
             $request->session()->put('user', $query);

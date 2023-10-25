@@ -2,83 +2,182 @@
 
 namespace App\Http\Controllers;
 
+use Carbon\Carbon;
+use App\Models\MenuModel;
 use Illuminate\Http\Request;
+use App\Models\AksesModel;
+use App\Models\SubmenuModel;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Session;
 
 class MenuController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function index()
     {
-        //
+        $data["title"] = "Menu";
+        $data["data"] = MenuModel::orderBy('menu_sort', 'ASC')->get();
+        return view('Master.Menu.index', $data);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
+    public function sortup($sort)
     {
-        //
+        $data1 = MenuModel::where('menu_sort', '=', $sort)->first();
+        $data2 = MenuModel::where('menu_sort', '=', $sort - 1)->first();
+
+        MenuModel::where('menu_id', $data1->menu_id)
+            ->update([
+                'menu_sort' => $sort - 1
+            ]);
+
+        MenuModel::where('menu_id', $data2->menu_id)
+            ->update([
+                'menu_sort' => $sort
+            ]);
+
+        $data["title"] = "Menu";
+        //redirect to index
+        return redirect()->route('menu.index')->with($data);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
+    public function sortdown($sort)
+    {
+        $data1 = MenuModel::where('menu_sort', '=', $sort)->first();
+        $data2 = MenuModel::where('menu_sort', '=', $sort + 1)->first();
+
+        MenuModel::where('menu_id', $data1->menu_id)
+            ->update([
+                'menu_sort' => $sort + 1
+            ]);
+
+        MenuModel::where('menu_id', $data2->menu_id)
+            ->update([
+                'menu_sort' => $sort
+            ]);
+
+        $data["title"] = "Menu";
+        //redirect to index
+        return redirect()->route('menu.index')->with($data);
+    }
+
     public function store(Request $request)
     {
-        //
+        $slug = strtolower(trim(preg_replace('/[^A-Za-z0-9-]+/', '-', $request->judul)));
+        $generateID = Carbon::now()->timestamp;
+
+        //create
+        MenuModel::create([
+            'menu_id' => $generateID,
+            'menu_judul' => $request->judul,
+            'menu_slug' => $slug,
+            'menu_icon' => $request->icon,
+            'menu_redirect' => $request->type == 1 ? $request->redirect : '-',
+            'menu_sort' => MenuModel::count() + 1,
+            'menu_type' => $request->type,
+        ]);
+
+
+        if ($request->type == 2) {
+            $object = [];
+            $index = 0;
+            $sort = 1;
+            foreach ($request->subjudul as $sub) {
+                $object[] = [
+                    'menu_id' => $generateID,
+                    'submenu_judul' => $sub,
+                    'submenu_slug' => strtolower(trim(preg_replace('/[^A-Za-z0-9-]+/', '-', $sub))),
+                    'submenu_redirect' => $request->redirectsub[$index++],
+                    'submenu_sort' => $sort++,
+                    'created_at' => now(),
+                    'updated_at' => now()
+                ];
+            }
+            SubmenuModel::insert($object);
+        }
+
+        $data['title'] = "Menu";
+        Session::flash('status', 'success');
+        Session::flash('msg', 'Berhasil ditambah!');
+
+        //redirect to index
+        return redirect()->route('menu.index')->with($data);
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
+    public function update(Request $request, MenuModel $menu)
     {
-        //
+        $slug = strtolower(trim(preg_replace('/[^A-Za-z0-9-]+/', '-', $request->ujudul)));
+
+        //update
+        $menu->update([
+            'menu_judul' => $request->ujudul,
+            'menu_slug' => $slug,
+            'menu_icon' => $request->uicon,
+            'menu_redirect' => $request->utype == 1 ? $request->uredirect : '-',
+            'menu_type' => $request->utype,
+        ]);
+
+        if ($request->utype == 2) {
+            $object = [];
+            $index = 0;
+            $sort = 1;
+            $getSubmenu = SubmenuModel::where('menu_id', '=', $menu->menu_id)->get();
+            if(count($getSubmenu) > 0){
+                foreach($getSubmenu as $sb){
+                    AksesModel::where('submenu_id', '=', $sb->submenu_id)->delete();
+                }
+            } 
+            SubmenuModel::where('menu_id', '=', $menu->menu_id)->delete();
+            foreach ($request->usubjudul as $sub) {
+                $object[] = [
+                    'menu_id' => $menu->menu_id,
+                    'submenu_judul' => $sub,
+                    'submenu_slug' => strtolower(trim(preg_replace('/[^A-Za-z0-9-]+/', '-', $sub))),
+                    'submenu_redirect' => $request->uredirectsub[$index++],
+                    'submenu_sort' => $sort++,
+                    'created_at' => now(),
+                    'updated_at' => now()
+                ];
+            }
+            SubmenuModel::insert($object);
+        }else{
+            SubmenuModel::where('menu_id', '=', $menu->menu_id)->delete();
+        }
+
+        $data['title'] = "Menu";
+        Session::flash('status', 'success');
+        Session::flash('msg', 'Berhasil diubah!');
+
+        //redirect to index
+        return redirect()->route('menu.index')->with($data);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
+    public function hapus(Request $request)
     {
-        //
-    }
+        //delete
+        AksesModel::where('menu_id', '=', $request->idmenu)->delete();
+        $getSubmenu = SubmenuModel::where('menu_id', '=', $request->idmenu)->get();
+        if(count($getSubmenu) > 0){
+            foreach($getSubmenu as $sb){
+                AksesModel::where('submenu_id', '=', $sb->submenu_id)->delete();
+            }
+        } 
+        MenuModel::findOrFail($request->idmenu)->delete();
+        SubmenuModel::where('menu_id', '=', $request->idmenu)->delete();
+        $menus = MenuModel::orderBy('menu_sort', 'ASC')->get();
+        $no = 1;
+        if (count($menus) > 0) {
+            foreach ($menus as $m) {
+                MenuModel::where('menu_id', $m->menu_id)
+                    ->update([
+                        'menu_sort' => $no++
+                    ]);
+            }
+        }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
+        $data['title'] = "Menu";
+        Session::flash('status', 'success');
+        Session::flash('msg', 'Berhasil dihapus!');
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
+        //redirect to index
+        return redirect()->route('menu.index')->with($data);
     }
 }

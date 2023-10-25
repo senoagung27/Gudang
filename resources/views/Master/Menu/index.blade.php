@@ -2,7 +2,7 @@
 
 <?php
 
-use App\Models\Admin\SubmenuModel;
+use App\Models\SubmenuModel;
 ?>
 
 @section('content')

@@ -1,8 +1,8 @@
  <?php
 
-    use App\Models\Admin\AksesModel;
-    use App\Models\Admin\MenuModel;
-    use App\Models\Admin\SubmenuModel;
+    use App\Models\AksesModel;
+    use App\Models\MenuModel;
+    use App\Models\SubmenuModel;
     use Illuminate\Support\Facades\Session;
 
     $menu = MenuModel::orderBy('menu_sort', 'ASC')->get();
@@ -69,7 +69,7 @@
                  @if($getMenu > 0)
                  <?php
                     $submenu = SubmenuModel::where('menu_id', '=', $m->menu_id)->orderBy('submenu_sort', 'ASC')->get();
-                    $checkMenu = SubmenuModel::join('tbl_menu', 'tbl_menu.menu_id', '=', 'tbl_submenu.menu_id')->select()->where(array('tbl_menu.menu_judul' => $m->menu_judul, 'tbl_submenu.submenu_judul' => $title))->count();
+                    $checkMenu = SubmenuModel::join('menu_models', 'menu_models.menu_id', '=', 'submenu_models.menu_id')->select()->where(array('menu_models.menu_judul' => $m->menu_judul, 'submenu_models.submenu_judul' => $title))->count();
                     ?>
                  <li class="slide {{$checkMenu > 0 ? 'is-expanded' : ''}}">
                      <a class="side-menu__item {{$checkMenu > 0 ? 'active' : ''}}" data-bs-toggle="slide" href="javascript:void(0)">

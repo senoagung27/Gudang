@@ -1,15 +1,27 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\MerkController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\AksesController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\RolesController;
+use App\Http\Controllers\BarangController;
+use App\Http\Controllers\SatuanController;
 use App\Http\Controllers\StokFFController;
+use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\ProduksiController;
 use App\Http\Controllers\AppreanceController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\UserModelController;
+use App\Http\Controllers\JenisBarangController;
+use App\Http\Controllers\MenuController;
+use App\Http\Controllers\RoleController;
 use App\Http\Controllers\PermissionsController;
 use App\Http\Controllers\StokJubelioController;
+use App\Http\Controllers\BarangkeluarController;
+use App\Http\Controllers\LapStokBarangController;
+use App\Http\Controllers\LapBarangMasukController;
 use App\Http\Controllers\MasterMaterialController;
 
 /*
@@ -170,7 +182,7 @@ Route::group(['middleware' => 'userlogin'], function () {
 
     Route::middleware(['checkRoleUser:/satuan,submenu'])->group(function () {
         // Satuan
-        Route::resource('/admin/satuan', \App\Http\Controllers\Admin\SatuanController::class);
+        Route::resource('/admin/satuan', \App\Http\Controllers\SatuanController::class);
         Route::get('/admin/satuan/show/', [SatuanController::class, 'show'])->name('satuan.getsatuan');
         Route::post('/admin/satuan/proses_tambah/', [SatuanController::class, 'proses_tambah'])->name('satuan.store');
         Route::post('/admin/satuan/proses_ubah/{satuan}', [SatuanController::class, 'proses_ubah']);
@@ -179,7 +191,7 @@ Route::group(['middleware' => 'userlogin'], function () {
 
     Route::middleware(['checkRoleUser:/merk,submenu'])->group(function () {
         // Merk
-        Route::resource('/admin/merk', \App\Http\Controllers\Admin\MerkController::class);
+        Route::resource('/admin/merk', \App\Http\Controllers\MerkController::class);
         Route::get('/admin/merk/show/', [MerkController::class, 'show'])->name('merk.getmerk');
         Route::post('/admin/merk/proses_tambah/', [MerkController::class, 'proses_tambah'])->name('merk.store');
         Route::post('/admin/merk/proses_ubah/{merk}', [MerkController::class, 'proses_ubah']);
@@ -188,7 +200,7 @@ Route::group(['middleware' => 'userlogin'], function () {
 
     Route::middleware(['checkRoleUser:/barang,submenu'])->group(function () {
         // Barang
-        Route::resource('/admin/barang', \App\Http\Controllers\Admin\BarangController::class);
+        Route::resource('/admin/barang', \App\Http\Controllers\BarangController::class);
         Route::get('/admin/barang/show/', [BarangController::class, 'show'])->name('barang.getbarang');
         Route::post('/admin/barang/proses_tambah/', [BarangController::class, 'proses_tambah'])->name('barang.store');
         Route::post('/admin/barang/proses_ubah/{barang}', [BarangController::class, 'proses_ubah']);
@@ -197,7 +209,7 @@ Route::group(['middleware' => 'userlogin'], function () {
 
     Route::middleware(['checkRoleUser:/customer,menu'])->group(function () {
         // Customer
-        Route::resource('/admin/customer', \App\Http\Controllers\Admin\CustomerController::class);
+        Route::resource('/admin/customer', \App\Http\Controllers\CustomerController::class);
         Route::get('/admin/customer/show/', [CustomerController::class, 'show'])->name('customer.getcustomer');
         Route::post('/admin/customer/proses_tambah/', [CustomerController::class, 'proses_tambah'])->name('customer.store');
         Route::post('/admin/customer/proses_ubah/{customer}', [CustomerController::class, 'proses_ubah']);
@@ -206,7 +218,7 @@ Route::group(['middleware' => 'userlogin'], function () {
 
     Route::middleware(['checkRoleUser:/barang-masuk,submenu'])->group(function () {
         // Barang Masuk
-        Route::resource('/admin/barang-masuk', \App\Http\Controllers\Admin\BarangmasukController::class);
+        Route::resource('/admin/barang-masuk', \App\Http\Controllers\BarangmasukController::class);
         Route::get('/admin/barang-masuk/show/', [BarangmasukController::class, 'show'])->name('barang-masuk.getbarang-masuk');
         Route::post('/admin/barang-masuk/proses_tambah/', [BarangmasukController::class, 'proses_tambah'])->name('barang-masuk.store');
         Route::post('/admin/barang-masuk/proses_ubah/{barangmasuk}', [BarangmasukController::class, 'proses_ubah']);
@@ -226,7 +238,7 @@ Route::group(['middleware' => 'userlogin'], function () {
 
     Route::middleware(['checkRoleUser:/lap-barang-masuk,submenu'])->group(function () {
         // Laporan Barang Masuk
-        Route::resource('/admin/lap-barang-masuk', \App\Http\Controllers\Admin\LapBarangMasukController::class);
+        Route::resource('/admin/lap-barang-masuk', \App\Http\Controllers\LapBarangMasukController::class);
         Route::get('/admin/lapbarangmasuk/print/', [LapBarangMasukController::class, 'print'])->name('lap-bm.print');
         Route::get('/admin/lapbarangmasuk/pdf/', [LapBarangMasukController::class, 'pdf'])->name('lap-bm.pdf');
         Route::get('/admin/lap-barang-masuk/show/', [LapBarangMasukController::class, 'show'])->name('lap-bm.getlap-bm');
@@ -242,7 +254,7 @@ Route::group(['middleware' => 'userlogin'], function () {
 
     Route::middleware(['checkRoleUser:/lap-stok-barang,submenu'])->group(function () {
         // Laporan Stok Barang
-        Route::resource('/admin/lap-stok-barang', \App\Http\Controllers\Admin\LapStokBarangController::class);
+        Route::resource('/admin/lap-stok-barang', \App\Http\Controllers\LapStokBarangController::class);
         Route::get('/admin/lapstokbarang/print/', [LapStokBarangController::class, 'print'])->name('lap-sb.print');
         Route::get('/admin/lapstokbarang/pdf/', [LapStokBarangController::class, 'pdf'])->name('lap-sb.pdf');
         Route::get('/admin/lap-stok-barang/show/', [LapStokBarangController::class, 'show'])->name('lap-sb.getlap-sb');
@@ -252,7 +264,7 @@ Route::group(['middleware' => 'userlogin'], function () {
 
         Route::middleware(['checkRoleUser:2,othermenu'])->group(function () {
             // Menu
-            Route::resource('/admin/menu', \App\Http\Controllers\Master\MenuController::class);
+            Route::resource('/admin/menu', \App\Http\Controllers\MenuController::class);
             Route::post('/admin/menu/hapus', [MenuController::class, 'hapus']);
             Route::get('/admin/menu/sortup/{sort}', [MenuController::class, 'sortup']);
             Route::get('/admin/menu/sortdown/{sort}', [MenuController::class, 'sortdown']);
@@ -260,16 +272,16 @@ Route::group(['middleware' => 'userlogin'], function () {
 
         Route::middleware(['checkRoleUser:3,othermenu'])->group(function () {
             // Role
-            Route::resource('/admin/role', \App\Http\Controllers\Master\RoleController::class);
+            Route::resource('/admin/role', \App\Http\Controllers\RoleController::class);
             Route::get('/admin/role/show/', [RoleController::class, 'show'])->name('role.getrole');
             Route::post('/admin/role/hapus', [RoleController::class, 'hapus']);
         });
 
         Route::middleware(['checkRoleUser:4,othermenu'])->group(function () {
             // List User
-            Route::resource('/admin/user', \App\Http\Controllers\Master\UserController::class);
-            Route::get('/admin/user/show/', [UserController::class, 'show'])->name('user.getuser');
-            Route::post('/admin/user/hapus', [UserController::class, 'hapus']);
+            Route::resource('/admin/user', \App\Http\Controllers\UserModelController::class);
+            Route::get('/admin/user/show/', [UserModelController::class, 'show'])->name('user.getuser');
+            Route::post('/admin/user/hapus', [UserModelController::class, 'hapus']);
         });
 
         Route::middleware(['checkRoleUser:5,othermenu'])->group(function () {
@@ -283,7 +295,7 @@ Route::group(['middleware' => 'userlogin'], function () {
 
         Route::middleware(['checkRoleUser:6,othermenu'])->group(function () {
             // Web
-            Route::resource('/admin/web', \App\Http\Controllers\Master\WebController::class);
+            Route::resource('/admin/web', \App\Http\Controllers\WebController::class);
         });
     });
 });

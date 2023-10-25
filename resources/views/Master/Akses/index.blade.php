@@ -1,8 +1,8 @@
 @extends('Master.Layouts.app', ['title' => $title])
 <?php
 
-use App\Models\Admin\AksesModel;
-use App\Models\Admin\SubmenuModel; ?>
+use App\Models\AksesModel;
+use App\Models\SubmenuModel; ?>
 
 @section('content')
 <!-- PAGE-HEADER -->
