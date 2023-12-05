@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use Carbon\Carbon;
 use App\Models\WebModel;
-use Barryvdh\DomPDF\PDF;
+// use Barryvdh\DomPDF\PDF;
+// use Barryvdh\DomPDF\Facade as PDF;
+use PDF;
 use Illuminate\Http\Request;
 use App\Models\BarangmasukModel;
 use Yajra\DataTables\DataTables;
